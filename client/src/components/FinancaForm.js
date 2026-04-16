@@ -166,7 +166,7 @@ const FinancaForm = ({ onFinancaCriada }) => {
         assinatura: false, frequenciaAssinatura: 'mensal', parcelas: '', errors: {},
       });
       setParseResult(null);
-      setModo('nl');
+      setModo('manual');
     } catch (error) {
       setMensagem(`✗ ERRO: ${error.response?.data?.error || error.message}`);
     } finally {
