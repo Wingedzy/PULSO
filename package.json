@@ -1,0 +1,28 @@
+{
+  "name": "central-produtividade-ia",
+  "version": "1.0.0",
+  "description": "Central de produtividade com organização inteligente de tarefas e IA",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node server/index.js"
+  },
+  "dependencies": {
+    "@hapi/joi": "^17.1.1",
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "express": "^4.22.1",
+    "express-rate-limit": "^8.3.2",
+    "helmet": "^8.1.0",
+    "mongoose": "^9.4.1",
+    "uuid": "^9.0.0"
+  },
+  "keywords": [
+    "produtividade",
+    "ia",
+    "gestão-tarefas",
+    "rotinas"
+  ],
+  "author": "",
+  "license": "MIT"
+}

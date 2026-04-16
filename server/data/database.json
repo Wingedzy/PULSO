@@ -1,0 +1,773 @@
+{
+  "tarefas": [
+    {
+      "id": "b5aa524f-94c9-4c61-87ac-ab82b99da5ee",
+      "tipo": "tarefa",
+      "titulo": "Filme",
+      "descricao": "Procurar pra assistir Free Guy",
+      "data": "2026-04-13",
+      "prioridade": 3,
+      "status": "concluido",
+      "tags": [
+        "filmin"
+      ],
+      "created_at": "2026-04-12T00:25:40.477Z",
+      "updated_at": "2026-04-15T14:58:43.333Z"
+    }
+  ],
+  "rotinas": [],
+  "estudos": [
+    {
+      "id": "d2cfe95a-4de4-42e9-bfb6-972828a12eee",
+      "assunto": "Estudar Programa;'ao",
+      "topico": "react",
+      "duracao_planejada": 40,
+      "data": "2026-04-13",
+      "duracao_real": 32,
+      "concluido": 1,
+      "observacoes": "Estudar né",
+      "created_at": "2026-04-13T16:58:08.296Z",
+      "updated_at": "2026-04-15T14:58:37.155Z"
+    },
+    {
+      "id": "7c94801d-c82c-45c9-b924-a0faae82fa74",
+      "assunto": "Estudar programa",
+      "topico": "react",
+      "duracao_planejada": 32,
+      "data": "2026-04-13",
+      "duracao_real": 23,
+      "concluido": 1,
+      "observacoes": "",
+      "created_at": "2026-04-13T19:55:16.172Z",
+      "updated_at": "2026-04-15T14:58:38.884Z"
+    },
+    {
+      "id": "6100e6d5-44f3-48b7-921e-86a915cd7949",
+      "assunto": "dsadas",
+      "topico": "dasdasdsa",
+      "duracao_planejada": 53,
+      "data": "2026-04-12",
+      "duracao_real": 12,
+      "concluido": 1,
+      "observacoes": "dsadasdsa",
+      "created_at": "2026-04-12T00:22:20.999Z",
+      "updated_at": "2026-04-12T00:22:24.189Z"
+    },
+    {
+      "id": "cf3d1423-58c1-4e4e-8df3-83a552a24ee5",
+      "assunto": "programação",
+      "topico": "angular",
+      "duracao_planejada": 60,
+      "data": "2026-04-09",
+      "duracao_real": 40,
+      "concluido": 1,
+      "observacoes": "estudar né",
+      "created_at": "2026-04-09T13:50:02.820Z",
+      "updated_at": "2026-04-10T04:37:38.178Z"
+    }
+  ],
+  "treinos": [
+    {
+      "id": "c95b2cbb-8c5b-40b8-a207-c4bccf2819fa",
+      "tipo": "musculacao",
+      "exercicios": [
+        "Peito e Tríceps"
+      ],
+      "data": "2026-04-13",
+      "duracao": 60,
+      "intensidade": "alta",
+      "concluido": 1,
+      "observacoes": "Treinin de peito e tríceps",
+      "created_at": "2026-04-13T16:58:32.612Z",
+      "updated_at": "2026-04-15T14:58:58.051Z"
+    },
+    {
+      "id": "52439e74-73aa-49f1-9315-57b5b8a3f9e0",
+      "tipo": "musculacao",
+      "exercicios": [
+        "sei lá",
+        "sei lá sei lá"
+      ],
+      "data": "2026-04-10",
+      "duracao": 60,
+      "intensidade": "media",
+      "concluido": 1,
+      "observacoes": "vai ser bom",
+      "created_at": "2026-04-09T13:49:47.829Z",
+      "updated_at": "2026-04-10T04:26:19.463Z"
+    },
+    {
+      "id": "6d082979-ad4c-4926-921b-78f4601c4001",
+      "tipo": "musculacao",
+      "exercicios": [
+        "puxada alta",
+        "remada",
+        "biceps rosca",
+        "rosca martelo",
+        "rosca invertida"
+      ],
+      "data": "2026-04-08",
+      "duracao": 60,
+      "intensidade": "alta",
+      "concluido": 1,
+      "observacoes": "",
+      "created_at": "2026-04-08T04:10:44.049Z",
+      "updated_at": "2026-04-08T04:10:48.694Z"
+    }
+  ],
+  "conversas": [
+    {
+      "id": "0a76a70a-7210-4c2e-9603-b7c19ec86925",
+      "titulo": "dsd",
+      "created_at": "2026-04-08T07:17:03.313Z"
+    },
+    {
+      "id": "7368d32e-8212-43b6-8746-88d47555aece",
+      "titulo": "gastos",
+      "created_at": "2026-04-08T03:45:09.017Z"
+    },
+    {
+      "id": "3a3c3a01-4eac-4fcb-983b-389e3b271073",
+      "titulo": "Teste",
+      "created_at": "2026-04-08T03:19:59.340Z"
+    },
+    {
+      "id": "a1913790-1c25-42e9-a80d-35c682268dd4",
+      "titulo": "Nova Sessão",
+      "created_at": "2026-04-08T03:11:05.103Z"
+    }
+  ],
+  "mensagens": [
+    {
+      "id": "c863ed81-f501-4527-aa2e-8ddaca0dd5fd",
+      "conversa_id": "a1913790-1c25-42e9-a80d-35c682268dd4",
+      "role": "user",
+      "conteudo": "vou treinar amanhã",
+      "created_at": "2026-04-08T03:11:07.112Z"
+    },
+    {
+      "id": "87f6e93a-e91a-45c9-bb84-0c70dea7fb75",
+      "conversa_id": "a1913790-1c25-42e9-a80d-35c682268dd4",
+      "role": "user",
+      "conteudo": "tarefa",
+      "created_at": "2026-04-08T03:11:15.048Z"
+    },
+    {
+      "id": "1a1b3036-225e-45cb-b2e8-626b96096178",
+      "conversa_id": "a1913790-1c25-42e9-a80d-35c682268dd4",
+      "role": "user",
+      "conteudo": "hoje treinei braço",
+      "created_at": "2026-04-08T03:11:34.388Z"
+    },
+    {
+      "id": "4fc4aa4b-a943-4ba2-a2f4-e6af3daf49ce",
+      "conversa_id": "a1913790-1c25-42e9-a80d-35c682268dd4",
+      "role": "user",
+      "conteudo": "organiza no treino",
+      "created_at": "2026-04-08T03:12:13.350Z"
+    },
+    {
+      "id": "dfd971d8-4029-4bab-a6dc-3035a4191968",
+      "conversa_id": "a1913790-1c25-42e9-a80d-35c682268dd4",
+      "role": "user",
+      "conteudo": "crie uma tarefa para dia 9 de abril de 2026, preciso pagar uma conta",
+      "created_at": "2026-04-08T03:12:57.067Z"
+    },
+    {
+      "id": "076eb427-41e3-41a8-92fc-30e81b1d0e58",
+      "conversa_id": "3a3c3a01-4eac-4fcb-983b-389e3b271073",
+      "role": "user",
+      "conteudo": "dia 10 de maio tenho um compromisso, adicione na aba de tarefas",
+      "created_at": "2026-04-08T03:20:15.120Z"
+    },
+    {
+      "id": "05713872-931b-41ff-b588-8abc346637e8",
+      "conversa_id": "3a3c3a01-4eac-4fcb-983b-389e3b271073",
+      "role": "user",
+      "conteudo": "gastei 20 reais no big box hoje",
+      "created_at": "2026-04-08T03:20:28.072Z"
+    },
+    {
+      "id": "aa494e9a-6669-4062-b97f-80a02a66a1ff",
+      "conversa_id": "3a3c3a01-4eac-4fcb-983b-389e3b271073",
+      "role": "user",
+      "conteudo": "gasto",
+      "created_at": "2026-04-08T03:20:38.308Z"
+    },
+    {
+      "id": "f2bd056c-2ee3-47b9-8162-db263d9d3831",
+      "conversa_id": "7368d32e-8212-43b6-8746-88d47555aece",
+      "role": "user",
+      "conteudo": "gastei 20 reais no big box hoje, e recebi 50 reais no trabalho",
+      "created_at": "2026-04-08T03:45:23.905Z"
+    },
+    {
+      "id": "3c5c031a-87a5-463f-b765-c3c188b15458",
+      "conversa_id": "7368d32e-8212-43b6-8746-88d47555aece",
+      "role": "user",
+      "conteudo": "sim",
+      "created_at": "2026-04-08T03:45:27.021Z"
+    },
+    {
+      "id": "ced1dc6e-86c9-4ce3-b0ff-74868b50cc63",
+      "conversa_id": "7368d32e-8212-43b6-8746-88d47555aece",
+      "role": "user",
+      "conteudo": "registre na categoria de gastos",
+      "created_at": "2026-04-08T03:46:05.050Z"
+    },
+    {
+      "id": "280fd8de-d136-4834-a014-349910b3e82c",
+      "conversa_id": "1",
+      "role": "user",
+      "conteudo": "gastei 50 no mercado e ganhei 1000 de sal�rio",
+      "created_at": "2026-04-08T05:36:56.796Z"
+    },
+    {
+      "id": "3ed9cd24-ddf3-423c-868a-f34a7186f7c4",
+      "conversa_id": "teste123",
+      "role": "user",
+      "conteudo": "gastei 50 no mercado e ganhei 1000 de salario",
+      "created_at": "2026-04-08T05:43:53.047Z"
+    },
+    {
+      "id": "7be4e0eb-0f83-4f85-8304-00cd200de863",
+      "conversa_id": "7368d32e-8212-43b6-8746-88d47555aece",
+      "role": "user",
+      "conteudo": "o que vc é?",
+      "created_at": "2026-04-08T07:16:55.172Z"
+    },
+    {
+      "id": "8cb45c7d-5259-4cdf-8d56-d65b512abcc3",
+      "conversa_id": "0a76a70a-7210-4c2e-9603-b7c19ec86925",
+      "role": "user",
+      "conteudo": "o que você é?",
+      "created_at": "2026-04-08T07:17:09.844Z"
+    }
+  ],
+  "financas": [
+    {
+      "id": "fb5b86b3-d0e5-4495-9c8b-f7dfb2590bfc",
+      "tipo": "entrada",
+      "valor": 2040.73,
+      "data": "2026-04-15",
+      "descricao": "Salário",
+      "categoria": "salario",
+      "created_at": "2026-04-15T15:04:55.268Z",
+      "updated_at": "2026-04-15T15:04:55.268Z"
+    },
+    {
+      "id": "36b5f0d3-6764-4452-b5e2-16d6767ede10",
+      "tipo": "saida",
+      "valor": 8.88,
+      "data": "2026-04-13",
+      "descricao": "99Food",
+      "categoria": "alimentação",
+      "banco": "bb",
+      "tipoPagamento": "credito",
+      "parcelas": null,
+      "assinatura": false,
+      "created_at": "2026-04-15T15:07:43.466Z",
+      "updated_at": "2026-04-15T15:07:43.466Z"
+    },
+    {
+      "id": "10d5eacc-e84e-4a99-837c-1ccbcd09fbac",
+      "tipo": "saida",
+      "valor": 15,
+      "data": "2026-04-12",
+      "descricao": "Uber - Mônaco para Casa",
+      "categoria": "transporte",
+      "banco": "nubank",
+      "tipoPagamento": "credito",
+      "parcelas": null,
+      "assinatura": false,
+      "created_at": "2026-04-15T15:08:16.470Z",
+      "updated_at": "2026-04-15T15:08:16.470Z"
+    },
+    {
+      "id": "6908387c-26b1-467b-b719-70c693240ee4",
+      "tipo": "saida",
+      "valor": 58,
+      "data": "2026-04-03",
+      "descricao": "Sky's Burger",
+      "categoria": "alimentação",
+      "banco": "bb",
+      "tipoPagamento": "credito",
+      "parcelas": null,
+      "assinatura": false,
+      "created_at": "2026-04-15T15:09:24.097Z",
+      "updated_at": "2026-04-15T15:09:24.097Z"
+    },
+    {
+      "id": "7a6da2de-6297-4b29-affb-c5be91707515",
+      "tipo": "saida",
+      "valor": 33,
+      "data": "2026-04-03",
+      "descricao": "Mercado União",
+      "categoria": "alimentação",
+      "banco": "bb",
+      "tipoPagamento": "credito",
+      "parcelas": null,
+      "assinatura": false,
+      "created_at": "2026-04-15T15:10:19.989Z",
+      "updated_at": "2026-04-15T15:10:19.989Z"
+    },
+    {
+      "id": "76d253eb-4908-41ef-8507-c7a8b103661d",
+      "tipo": "saida",
+      "valor": 4.95,
+      "data": "2026-04-01",
+      "descricao": "Ifood - Assinatura",
+      "categoria": "outros",
+      "banco": "bb",
+      "tipoPagamento": "credito",
+      "parcelas": null,
+      "assinatura": false,
+      "created_at": "2026-04-15T15:11:19.928Z",
+      "updated_at": "2026-04-15T15:11:19.928Z"
+    },
+    {
+      "id": "189b1a31-9f47-4553-920f-b5538f273700",
+      "tipo": "saida",
+      "valor": 119.32,
+      "data": "2026-04-01",
+      "descricao": "Resident Evil Requiem",
+      "categoria": "lazer",
+      "banco": "bb",
+      "tipoPagamento": "credito",
+      "parcelas": null,
+      "assinatura": false,
+      "created_at": "2026-04-15T15:12:27.845Z",
+      "updated_at": "2026-04-15T15:12:27.845Z"
+    },
+    {
+      "id": "855a5b96-566b-4a76-9e43-25a755fd1c37",
+      "tipo": "saida",
+      "valor": 16.9,
+      "data": "2026-04-01",
+      "descricao": "Youtube - Assinatura",
+      "categoria": "outros",
+      "banco": "bb",
+      "tipoPagamento": "credito",
+      "parcelas": null,
+      "assinatura": false,
+      "created_at": "2026-04-15T15:12:51.015Z",
+      "updated_at": "2026-04-15T15:12:51.015Z"
+    },
+    {
+      "id": "4d601131-2185-4590-9a2d-4062f1caebd3",
+      "tipo": "saida",
+      "valor": 12.5,
+      "data": "2026-04-01",
+      "descricao": "Google Drive - Assinatura",
+      "categoria": "outros",
+      "banco": "bb",
+      "tipoPagamento": "credito",
+      "parcelas": null,
+      "assinatura": false,
+      "created_at": "2026-04-15T15:13:13.604Z",
+      "updated_at": "2026-04-15T15:13:13.604Z"
+    },
+    {
+      "id": "d8644e78-268b-4596-8352-2ec36d10ded2",
+      "tipo": "saida",
+      "valor": 150,
+      "data": "2026-04-01",
+      "descricao": "Academia",
+      "categoria": "outros",
+      "banco": "bb",
+      "tipoPagamento": "credito",
+      "parcelas": null,
+      "assinatura": false,
+      "created_at": "2026-04-15T15:13:35.425Z",
+      "updated_at": "2026-04-15T15:13:35.425Z"
+    },
+    {
+      "id": "670ac744-de5f-4181-a809-a54e5f7ab9a9",
+      "tipo": "saida",
+      "valor": 50,
+      "data": "2026-04-15",
+      "descricao": "Anuidade Cartão ",
+      "categoria": "outros",
+      "banco": "bb",
+      "tipoPagamento": "credito",
+      "parcelas": null,
+      "assinatura": false,
+      "created_at": "2026-04-15T15:13:51.826Z",
+      "updated_at": "2026-04-15T15:13:51.826Z"
+    },
+    {
+      "id": "e999b42b-0386-47a4-a179-23a0fa3de757",
+      "tipo": "saida",
+      "valor": 76.12,
+      "data": "2026-04-01",
+      "descricao": "Jogos Parcelados ",
+      "categoria": "outros",
+      "banco": "bb",
+      "tipoPagamento": "credito",
+      "parcelas": null,
+      "assinatura": false,
+      "created_at": "2026-04-15T15:14:15.410Z",
+      "updated_at": "2026-04-15T15:14:15.410Z"
+    },
+    {
+      "id": "f1f4da6d-d710-4702-b464-4d55e1b56ea1",
+      "tipo": "saida",
+      "valor": 89.88,
+      "data": "2026-04-15",
+      "descricao": "Pós Graduação - GranFaculdade",
+      "categoria": "outros",
+      "banco": "bb",
+      "tipoPagamento": "credito",
+      "parcelas": null,
+      "assinatura": false,
+      "created_at": "2026-04-15T15:14:38.323Z",
+      "updated_at": "2026-04-15T15:14:38.323Z"
+    },
+    {
+      "id": "cf3ade56-fc83-4bd0-a46f-5a88d54b1c66",
+      "tipo": "saida",
+      "valor": 183.34,
+      "data": "2026-04-15",
+      "descricao": "Canabidiol - Parcelado em 5x",
+      "categoria": "saúde",
+      "banco": "bb",
+      "tipoPagamento": "credito",
+      "parcelas": null,
+      "assinatura": false,
+      "created_at": "2026-04-15T15:15:07.732Z",
+      "updated_at": "2026-04-15T15:15:07.732Z"
+    },
+    {
+      "id": "a5ae524f-698c-492c-8656-5b939132a93f",
+      "tipo": "entrada",
+      "valor": 553.77,
+      "data": "2026-04-15",
+      "descricao": "Tesouro Direto",
+      "categoria": "salário",
+      "banco": "bb",
+      "tipoPagamento": "pix",
+      "parcelas": null,
+      "assinatura": false,
+      "created_at": "2026-04-16T02:14:55.442Z",
+      "updated_at": "2026-04-16T02:14:55.442Z"
+    },
+    {
+      "id": "3a0d35d0-30cb-4252-b6e6-a7e7245dded9",
+      "tipo": "entrada",
+      "valor": 300,
+      "data": "2026-04-15",
+      "descricao": "Venda do meu Fone",
+      "categoria": "salário",
+      "banco": "bb",
+      "tipoPagamento": "pix",
+      "parcelas": null,
+      "assinatura": false,
+      "created_at": "2026-04-16T02:19:39.119Z",
+      "updated_at": "2026-04-16T02:19:39.119Z"
+    },
+    {
+      "id": "9419ae48-8c79-4034-b7db-3bea1e272e9e",
+      "tipo": "saida",
+      "valor": 73.54,
+      "data": "2026-04-15",
+      "descricao": "Fonte e Pasta Térmica - divido em 10x (Valor total:  735,47)",
+      "categoria": "outros",
+      "banco": "bb",
+      "tipoPagamento": "credito",
+      "parcelas": null,
+      "assinatura": false,
+      "created_at": "2026-04-16T03:38:58.081Z",
+      "updated_at": "2026-04-16T03:38:58.081Z"
+    },
+    {
+      "id": "07aac1a3-1a9e-4a3d-a298-a1bf8c2c5909",
+      "tipo": "saida",
+      "valor": 16,
+      "data": "2026-04-16",
+      "descricao": "Mercado união",
+      "categoria": "alimentacao",
+      "created_at": "2026-04-16T03:43:22.747Z",
+      "updated_at": "2026-04-16T03:43:22.747Z"
+    },
+    {
+      "id": "3a2813dd-d707-485e-ad5b-bbc01b0d3227",
+      "tipo": "saida",
+      "valor": 16,
+      "data": "2026-04-16",
+      "descricao": "Subway - Cookies",
+      "categoria": "alimentação",
+      "banco": "bb",
+      "tipoPagamento": "credito",
+      "parcelas": null,
+      "assinatura": false,
+      "created_at": "2026-04-16T03:44:06.971Z",
+      "updated_at": "2026-04-16T03:44:06.971Z"
+    },
+    {
+      "id": "a2de0d6f-dff8-4793-a26a-1e5401c09ef3",
+      "tipo": "saida",
+      "valor": 41.6,
+      "data": "2026-04-16",
+      "descricao": "Uber - Parkshopping - Casa",
+      "categoria": "transporte",
+      "banco": "nubank",
+      "tipoPagamento": "credito",
+      "parcelas": null,
+      "assinatura": false,
+      "created_at": "2026-04-16T03:46:15.249Z",
+      "updated_at": "2026-04-16T03:46:15.249Z"
+    }
+  ],
+  "agua": [
+    {
+      "data": "2026-04-12",
+      "total": 0,
+      "registros": [],
+      "meta": 3000
+    },
+    {
+      "data": "2026-04-13",
+      "total": 2200,
+      "registros": [
+        {
+          "quantidade": 500,
+          "hora": "02:58:43"
+        },
+        {
+          "quantidade": 200,
+          "hora": "12:27:33"
+        },
+
+        {
+          "quantidade": 500,
+          "hora": "16:50:55"
+        },
+        {
+          "quantidade": 500,
+          "hora": "20:58:31"
+        },
+        {
+          "quantidade": 500,
+          "hora": "22:39:22"
+        }
+      ],
+      "meta": 2000
+    },
+    {
+      "data": "2026-04-14",
+      "total": 1200,
+      "registros": [
+        {
+          "quantidade": 200,
+          "hora": "02:58:43"
+        },
+        {
+          "quantidade": 200,
+          "hora": "12:27:33"
+        },
+        {
+          "quantidade": 200,
+          "hora": "16:50:55"
+        },
+        {
+          "quantidade": 200,
+          "hora": "20:58:31"
+        },
+        {
+          "quantidade": 400,
+          "hora": "22:39:22"
+        }
+      ],
+      "meta": 2000
+    },
+    {
+      "data": "2026-04-15",
+      "total": 200,
+      "registros": [
+        {
+          "quantidade": 200,
+          "hora": "11:58:47"
+        }
+      ],
+      "meta": 2000
+    }
+  ],
+  "categorias": [
+    {
+      "id": "alimentacao",
+      "label": "Alimentação",
+      "icon": "🍔",
+      "cor": "#ffaa00",
+      "padrao": true
+    },
+    {
+      "id": "transporte",
+      "label": "Transporte",
+      "icon": "🚗",
+      "cor": "#00f3ff",
+      "padrao": true
+    },
+    {
+      "id": "moradia",
+      "label": "Moradia",
+      "icon": "🏠",
+      "cor": "#ff00ff",
+      "padrao": true
+    },
+    {
+      "id": "saude",
+      "label": "Saúde",
+      "icon": "💉",
+      "cor": "#00ff9d",
+      "padrao": true
+    },
+    {
+      "id": "lazer",
+      "label": "Lazer",
+      "icon": "🎮",
+      "cor": "#a78bfa",
+      "padrao": true
+    },
+    {
+      "id": "educacao",
+      "label": "Educação",
+      "icon": "📚",
+      "cor": "#00f3ff",
+      "padrao": true
+    },
+    {
+      "id": "vestuario",
+      "label": "Vestuário",
+      "icon": "👕",
+      "cor": "#ff00ff",
+      "padrao": true
+    },
+    {
+      "id": "investimento",
+      "label": "Investimento",
+      "icon": "📈",
+      "cor": "#00ff9d",
+      "padrao": true
+    },
+    {
+      "id": "salario",
+      "label": "Salário",
+      "icon": "💰",
+      "cor": "#00ff9d",
+      "padrao": true
+    },
+    {
+      "id": "freelance",
+      "label": "Freelance",
+      "icon": "💼",
+      "cor": "#ffaa00",
+      "padrao": true
+    },
+    {
+      "id": "outros",
+      "label": "Outros",
+      "icon": "📦",
+      "cor": "#888888",
+      "padrao": true
+    }
+  ],
+  "tiposPagamento": [
+    {
+      "id": "debito",
+      "label": "Débito",
+      "icon": "💳"
+    },
+    {
+      "id": "credito",
+      "label": "Crédito",
+      "icon": "💳"
+    },
+    {
+      "id": "fatura",
+      "label": "Fatura Cartão",
+      "icon": "🧾"
+    },
+    {
+      "id": "pix",
+      "label": "Pix",
+      "icon": "⚡"
+    },
+    {
+      "id": "dinheiro",
+      "label": "Dinheiro",
+      "icon": "💵"
+    },
+    {
+      "id": "ted_doc",
+      "label": "TED / DOC",
+      "icon": "🏦"
+    },
+    {
+      "id": "boleto",
+      "label": "Boleto",
+      "icon": "📄"
+    }
+  ],
+  "bancos": [
+    {
+      "id": "nubank",
+      "label": "Nubank",
+      "icon": "🟣"
+    },
+    {
+      "id": "inter",
+      "label": "Inter",
+      "icon": "🟠"
+    },
+    {
+      "id": "itau",
+      "label": "Itaú",
+      "icon": "🟡"
+    },
+    {
+      "id": "bradesco",
+      "label": "Bradesco",
+      "icon": "🔴"
+    },
+    {
+      "id": "bb",
+      "label": "Banco do Brasil",
+      "icon": "🟡"
+    },
+    {
+      "id": "caixa",
+      "label": "Caixa",
+      "icon": "🔵"
+    },
+    {
+      "id": "santander",
+      "label": "Santander",
+      "icon": "🔴"
+    },
+    {
+      "id": "c6",
+      "label": "C6 Bank",
+      "icon": "⚫"
+    },
+    {
+      "id": "xp",
+      "label": "XP",
+      "icon": "⬛"
+    },
+    {
+      "id": "picpay",
+      "label": "PicPay",
+      "icon": "🟢"
+    },
+    {
+      "id": "mercadopago",
+      "label": "Mercado Pago",
+      "icon": "💙"
+    },
+    {
+      "id": "outro",
+      "label": "Outro",
+      "icon": "🏦"
+    }
+  ]
+}

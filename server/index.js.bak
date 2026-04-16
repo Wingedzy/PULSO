@@ -1,0 +1,1054 @@
+const express = require('express');
+const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
+const { v4: uuidv4 } = require('uuid');
+
+const app = express();
+const PORT = process.env.PORT || 3001;
+
+app.use(cors());
+app.use(express.json());
+
+const dataPath = path.join(__dirname, 'data');
+const dbPath = path.join(dataPath, 'database.json');
+
+if (!fs.existsSync(dataPath)) {
+  fs.mkdirSync(dataPath, { recursive: true });
+}
+
+const loadData = () => {
+  try {
+    if (fs.existsSync(dbPath)) {
+      const data = fs.readFileSync(dbPath, 'utf8');
+      return JSON.parse(data);
+    }
+  } catch (error) {
+    console.error('Erro ao carregar dados:', error);
+  }
+  return { tarefas: [], rotinas: [], estudos: [], treinos: [], conversas: [], mensagens: [], financas: [] };
+};
+
+const saveData = (data) => {
+  try {
+    fs.writeFileSync(dbPath, JSON.stringify(data, null, 2));
+  } catch (error) {
+    console.error('Erro ao salvar dados:', error);
+  }
+};
+
+const db = loadData();
+
+class TaskOrganizer {
+  constructor() {
+    this.categorias = {
+      saude: ['academia', 'treino', 'exercício', 'caminhada', 'corrida', 'meditação', 'yoga', 'musculação', 'alongamento'],
+      trabalho: ['relatório', 'reunião', 'projeto', 'entrega', 'prazo', 'email', 'call', 'trabalho', 'cliente', 'apresentação'],
+      estudos: ['estudar', 'curso', 'aula', 'livro', 'leitura', 'pesquisa', 'aprender', 'concurso', 'exame', 'prova'],
+      pessoal: ['comprar', 'marcar', 'ligar', 'pagar', 'organizar', 'arrumar', 'casa', 'roupa', 'dentista', 'médico'],
+      ideias: ['ideia', 'pensar', 'planejar', 'criar', 'inovar', 'projeto', 'desenvolver', 'app', 'sistema', 'negócio']
+    };
+  }
+
+  analisarTarefa(titulo, descricao) {
+    const texto = `${titulo} ${descricao || ''}`.toLowerCase();
+    const categoriasDetectadas = {};
+
+    for (const [categoria, palavras] of Object.entries(this.categorias)) {
+      const matchCount = palavras.filter(palavra => texto.includes(palavra)).length;
+      if (matchCount > 0) {
+        categoriasDetectadas[categoria] = matchCount;
+      }
+    }
+
+    return categoriasDetectadas;
+  }
+
+  priorizarTarefa(titulo, descricao) {
+    const texto = `${titulo} ${descricao || ''}`.toLowerCase();
+    const palavrasUrgentes = ['urgente', 'hoje', 'agora', 'imediatamente', 'crítico', 'prazo curto', 'emergência', 'hoje mesmo'];
+    const palavrasImportantes = ['importante', 'prioridade', 'fundamental', 'essencial', 'crucial', 'relevante'];
+
+    const isUrgente = palavrasUrgentes.some(palavra => texto.includes(palavra));
+    const isImportante = palavrasImportantes.some(palavra => texto.includes(palavra));
+
+    if (isUrgente) return 1;
+    if (isImportante) return 2;
+    return 3;
+  }
+
+  sugerirData(prioridade) {
+    const hoje = new Date();
+
+    if (prioridade === 1) {
+      return this.formatarData(hoje);
+    } else if (prioridade === 2) {
+      const data = new Date(hoje);
+      data.setDate(data.getDate() + 1);
+      return this.formatarData(data);
+    } else {
+      const data = new Date(hoje);
+      data.setDate(data.getDate() + 3);
+      return this.formatarData(data);
+    }
+  }
+
+  formatarData(data) {
+    return data.toISOString().split('T')[0];
+  }
+
+  organizarIdeia(titulo, descricao) {
+    const categorias = this.analisarTarefa(titulo, descricao);
+    const prioridade = this.priorizarTarefa(titulo, descricao);
+    const dataSugerida = this.sugerirData(prioridade);
+
+    const tipo = Object.keys(categorias).length > 0
+      ? Object.entries(categorias).sort((a, b) => b[1] - a[1])[0][0]
+      : 'ideias';
+
+    return {
+      tipo: this.mapearTipo(tipo),
+      prioridade,
+      data: dataSugerida,
+      categorias: categorias,
+      sugestao: this.gerarSugestao(tipo, prioridade, titulo)
+    };
+  }
+
+  mapearTipo(categoria) {
+    const mapeamento = {
+      saude: 'treino',
+      trabalho: 'tarefa',
+      estudos: 'estudo',
+      pessoal: 'tarefa',
+      ideias: 'tarefa'
+    };
+    return mapeamento[categoria] || 'tarefa';
+  }
+
+  gerarSugestao(categoria, prioridade, titulo) {
+    const sugestoes = {
+      saude: `Esta ideia parece relacionada à saúde física. Que tal agendar um treino?`,
+      trabalho: `Parece uma tarefa profissional. Sugiro priorizar na sua agenda de tarefas.`,
+      estudos: `Parece um tema de estudo. Que tal planejar uma sessão de estudos?`,
+      pessoal: `Lembrete pessoal importante. Considere incluir na sua lista de tarefas.`,
+      ideias: `Ótima ideia! Vou catalogá-la como tarefa para você revisar depois.`
+    };
+
+    const labels = {
+      1: '🔴 URGENTE',
+      2: '🟡 Importante',
+      3: '🟢 Normal',
+      4: '🔵 Baixa',
+      5: '⚪ Muito baixa'
+    };
+
+    return `${sugestoes[categoria] || sugestoes.ideias} Classificado como: ${labels[prioridade] || labels[3]}`;
+  }
+}
+
+const organizer = new TaskOrganizer();
+
+// Parser Financeiro Resiliente - Formato garantido para backend
+class FinanceParser {
+  constructor() {
+    // Categorias SEM ACENTOS
+    this.categorias = {
+      'alimentacao': ['mercado', 'supermercado', 'restaurante', 'lanchonete', 'padaria', 'food', 'comida', 'refeicao', 'jantar', 'almoco', 'cafe', 'big box', 'carrefour', 'extra', 'assai', 'atacadao'],
+      'transporte': ['uber', 'taxi', 'onibus', 'metro', 'combustivel', 'gasolina', 'estacionamento', 'transporte', 'corrida', '99'],
+      'moradia': ['aluguel', 'condominio', 'luz', 'agua', 'gas', 'internet', 'telefone', 'casa', 'apartamento', 'net', 'fatura'],
+      'saude': ['farmacia', 'remedio', 'medico', 'hospital', 'plano de saude', 'dentista', 'consulta', 'exame', 'drogaria'],
+      'lazer': ['cinema', 'teatro', 'parque', 'viagem', 'hospedagem', 'show', 'evento', 'diversao', 'netflix', 'spotify'],
+      'educacao': ['curso', 'livro', 'material', 'escola', 'faculdade', 'mensalidade', 'apostila', 'udemy', 'coursera'],
+      'vestuario': ['roupa', 'calcado', 'acessorio', 'camisa', 'calca', 'tenis', 'sapato', 'zara', 'renner'],
+      'investimento': ['acoes', 'fundos', 'reserva', 'poupanca', 'cdb', 'tesouro', 'cripto', 'bitcoin'],
+      'salario': ['salario', 'salário', 'ordenado', 'rendimento', 'contracheque', 'holerite'],
+      'freelance': ['freelance', 'servico', 'cliente', 'projeto', 'trabalho extra', 'consultoria'],
+      'outros': []
+    };
+
+    this.palavrasEntrada = ['recebi', 'ganhei', 'salario', 'salário', 'renda', 'lucro', 'vendi', 'receber', 'pagaram', 'depositaram', 'reembolso', 'estorno', 'dividendo', 'juros', 'rendimento', 'contracheque'];
+    this.palavrasSaida = ['gastei', 'paguei', 'comprei', 'custo', 'despesa', 'debito', 'saquei', 'pagamento', 'compra', 'retirada', 'saque', 'gastar', 'pagar', 'comprar'];
+  }
+
+  parseAll(mensagem) {
+    const warnings = [];
+    const transacoes = this.extrairMultiplasTransacoes(mensagem, warnings);
+
+    return { transactions: transacoes, count: transacoes.length, warnings };
+  }
+
+  extrairMultiplasTransacoes(mensagem, warnings) {
+    const transacoes = [];
+    if (!mensagem || typeof mensagem !== 'string') return transacoes;
+
+    const segmentos = this.segmentar(mensagem);
+    for (const segmento of segmentos) {
+      const t = this.analisarSegmento(segmento, warnings);
+      if (t) transacoes.push(t);
+    }
+
+    if (transacoes.length === 0) {
+      const fallback = this.extrairFallback(mensagem, warnings);
+      transacoes.push(...fallback);
+    }
+
+    return transacoes;
+  }
+
+  segmentar(mensagem) {
+    let str = mensagem.toLowerCase().trim();
+    if (!str) return [];
+    // Proteger números com vírgula decimal (ex: 2040,73)
+    str = str.replace(/(\d),(\d)/g, '$1.$2');
+    str = str.replace(/\s+e\s+(?:depois\s+)?/gi, ', ');
+    str = str.replace(/\s+depois\s+/gi, ', ');
+    return str.split(',').map(s => s.trim()).filter(s => s.length > 0 && s.length < 300);
+  }
+  
+
+  analisarSegmento(segmento, warnings) {
+    // Extrair valor de forma mais robusta para números brasileiros
+    const valorMatch = segmento.match(/(?:r\$)?\s*([\d.,]+)\s*(?:reais)?/i);
+    if (!valorMatch) return null;
+
+    // Remover pontos (separador de milhar) e substituir vírgula por ponto
+    const valorStr = valorMatch[1].replace(/\.(?=\d{3})/g, '').replace(',', '.');
+    const valor = parseFloat(valorStr);
+    if (isNaN(valor) || valor <= 0) return null;
+
+    let tipo = this.determinarTipo(segmento);
+    if (!tipo) {
+      tipo = 'gasto';
+      warnings.push(`Transação sem verbo assumida como gasto: "${segmento.substring(0, 30)}..."`);
+    }
+
+    // CONVERTER para formato do backend
+    const tipoBackend = tipo === 'entrada' ? 'income' : 'expense';
+
+    const categoria = this.detectarCategoria(segmento, tipo, '');
+    const descricao = this.extrairDescricao(segmento, valorMatch, tipo, categoria);
+    const data = (() => { const d = new Date(); return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().split('T')[0]; })();
+
+    return {
+      type: tipoBackend,
+      amount: valor,
+      currency: 'BRL',
+      date: data,
+      description: descricao,
+      category: categoria
+    };
+  }
+
+  extrairDescricao(segmento, match, tipo, categoria = null) {
+  let descricao = segmento
+    .replace(/(?:r\$)?\s*[\d.,]+\s*(?:reais)?/gi, '')
+    .replace(/\b(gastei|paguei|comprei|recebi|ganhei|vendi|custo|despesa|pagamento|compra)\b/gi, '')
+    .replace(/\b(no|na|nos|nas|de|do|da|dos|das|em|por|para|um|uma)\b/gi, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  if (descricao.length > 0) {
+    descricao = descricao.charAt(0).toUpperCase() + descricao.slice(1);
+  }
+
+  if (!descricao) {
+    return tipo === 'entrada' ? 'Receita' : 'Despesa';
+  }
+
+  return descricao;
+}
+
+  determinarTipo(segmento) {
+    const temEntrada = this.palavrasEntrada.some(p => segmento.includes(p));
+    const temSaida = this.palavrasSaida.some(p => segmento.includes(p));
+
+    if (temEntrada && !temSaida) return 'entrada';
+    if (temSaida && !temEntrada) return 'gasto';
+    if (temSaida && temEntrada) return 'entrada';
+    if (/\b(recebi|ganhei|vendi|aluguel)\b/.test(segmento)) return 'entrada';
+    return null;
+  }
+
+  // Método de compatibilidade - alias para determinarTipo
+  determinarTipoSegmento(segmento) {
+    return this.determinarTipo(segmento);
+  }
+
+  // Método de compatibilidade - alias para analisarSegmento
+  analisarSegmentoSimples(segmento, warnings) {
+    return this.analisarSegmento(segmento, warnings);
+  }
+
+  detectarCategoria(segmento, tipo, descricao) {
+    const texto = (segmento + ' ' + descricao).toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    for (const [cat, palavras] of Object.entries(this.categorias)) {
+      if (cat === 'outros') continue;
+      if ((cat === 'salario' || cat === 'freelance') && tipo !== 'entrada') continue;
+      if (palavras.some(p => texto.includes(p))) return cat;
+    }
+    return 'outros';
+  }
+
+  extrairFallback(mensagem, warnings) {
+    const transacoes = [];
+    const regex = /(?:r\$)?\s*(\d+(?:[.,]\d{2})?)\s*(?:reais)?/gi;
+    let match;
+
+    while ((match = regex.exec(mensagem)) !== null) {
+      const valor = parseFloat(match[1].replace(',', '.'));
+      if (!valor || valor <= 0) continue;
+
+      const inicio = Math.max(0, match.index - 50);
+      const fim = Math.min(mensagem.length, match.index + match[0].length + 50);
+      const contexto = mensagem.substring(inicio, fim);
+
+      const tipo = this.determinarTipo(contexto) || 'gasto';
+      const tipoBackend = tipo === 'entrada' ? 'income' : 'expense';
+      const categoria = this.detectarCategoria(contexto, tipo, '');
+      const descricao = this.extrairDescricao(contexto, match, tipo, categoria);
+
+      warnings.push(`Transação extraída por fallback (baixa confiança)`);
+
+      transacoes.push({
+        type: tipoBackend,
+        amount: valor,
+        currency: 'BRL',
+        date: (() => { const d = new Date(); return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().split('T')[0]; })(),
+        description: descricao,
+        category: categoria
+      });
+    }
+
+    return transacoes;
+  }
+
+  parse(mensagem) {
+    const transacoes = this.extrairMultiplasTransacoes(mensagem, []);
+    return transacoes[0] || null;
+  }
+
+  sugerirTransacao(mensagem) {
+    const warnings = [];
+    const transacoes = this.extrairMultiplasTransacoes(mensagem, warnings);
+
+    if (transacoes.length === 0) {
+      return { valido: false, mensagem: 'Nenhuma transação detectada.', warnings };
+    }
+
+    return {
+      valido: true,
+      transacoes,
+      warnings,
+      sugestoes: transacoes.map(t => `${t.type.toUpperCase()} R$ ${t.amount.toFixed(2)} - ${t.category} - ${t.description}`)
+    };
+  }
+}
+
+
+
+
+const financeParser = new FinanceParser();
+
+app.get('/api/tarefas', (req, res) => {
+  res.json(db.tarefas.sort((a, b) => a.prioridade - b.prioridade));
+});
+
+app.post('/api/tarefas', (req, res) => {
+  const { titulo, descricao, data, prioridade, status, tags, tipo } = req.body;
+  const id = uuidv4();
+
+  const organizacao = organizer.organizarIdeia(titulo, descricao);
+
+  const novaTarefa = {
+    id,
+    tipo: tipo || organizacao.tipo,
+    titulo,
+    descricao: descricao || '',
+    data: data || organizacao.data,
+    prioridade: prioridade || organizacao.prioridade,
+    status: status || 'pendente',
+    tags: tags || Object.keys(organizacao.categorias),
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  };
+
+  db.tarefas.push(novaTarefa);
+  saveData(db);
+
+  res.json({ tarefa: novaTarefa, organizacao });
+});
+
+app.put('/api/tarefas/:id', (req, res) => {
+  const { id } = req.params;
+  const updates = req.body;
+
+  const index = db.tarefas.findIndex(t => t.id === id);
+  if (index !== -1) {
+    db.tarefas[index] = { ...db.tarefas[index], ...updates, updated_at: new Date().toISOString() };
+    saveData(db);
+    res.json(db.tarefas[index]);
+  } else {
+    res.status(404).json({ error: 'Tarefa não encontrada' });
+  }
+});
+
+app.delete('/api/tarefas/:id', (req, res) => {
+  const { id } = req.params;
+  db.tarefas = db.tarefas.filter(t => t.id !== id);
+  saveData(db);
+  res.json({ message: 'Tarefa removida com sucesso' });
+});
+
+app.get('/api/rotinas', (req, res) => {
+  res.json(db.rotinas);
+});
+
+app.post('/api/rotinas', (req, res) => {
+  const { nome, descricao, periodicidade, horario, dias_semana, ativa } = req.body;
+  const id = uuidv4();
+
+  const novaRotina = {
+    id,
+    nome,
+    descricao: descricao || '',
+    periodicidade,
+    horario: horario || null,
+    dias_semana: dias_semana || null,
+    ativa: ativa !== undefined ? ativa : 1,
+    created_at: new Date().toISOString(),
+  };
+
+  db.rotinas.push(novaRotina);
+  saveData(db);
+
+  res.json(novaRotina);
+});
+
+app.get('/api/estudos', (req, res) => {
+  res.json(db.estudos.sort((a, b) => new Date(b.data) - new Date(a.data)));
+});
+
+app.post('/api/estudos', (req, res) => {
+  const { assunto, topico, duracao_planejada, data, observacoes } = req.body;
+  const id = uuidv4();
+
+  const novoEstudo = {
+    id,
+    assunto,
+    topico: topico || '',
+    duracao_planejada: duracao_planejada || null,
+    data: data || (() => { const d = new Date(); return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().split('T')[0]; })(),
+    duracao_real: null,
+    concluido: 0,
+    observacoes: observacoes || '',
+    created_at: new Date().toISOString(),
+  };
+
+  db.estudos.push(novoEstudo);
+  saveData(db);
+
+  res.json(novoEstudo);
+});
+
+app.put('/api/estudos/:id/concluir', (req, res) => {
+  const { id } = req.params;
+  const { duracao_real } = req.body;
+
+  const index = db.estudos.findIndex(e => e.id === id);
+  if (index !== -1) {
+    db.estudos[index] = {
+      ...db.estudos[index],
+      concluido: 1,
+      duracao_real: duracao_real || null,
+      updated_at: new Date().toISOString(),
+    };
+    saveData(db);
+    res.json(db.estudos[index]);
+  } else {
+    res.status(404).json({ error: 'Estudo não encontrado' });
+  }
+});
+
+app.get('/api/treinos', (req, res) => {
+  res.json(db.treinos.sort((a, b) => new Date(b.data) - new Date(a.data)));
+});
+
+app.post('/api/treinos', (req, res) => {
+  const { tipo, exercicios, data, duracao, intensidade, observacoes } = req.body;
+  const id = uuidv4();
+
+  const novoTreino = {
+    id,
+    tipo,
+    exercicios: Array.isArray(exercicios) ? exercicios : [],
+    data: data || (() => { const d = new Date(); return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().split('T')[0]; })(),
+    duracao: duracao || null,
+    intensidade: intensidade || 'media',
+    concluido: 0,
+    observacoes: observacoes || '',
+    created_at: new Date().toISOString(),
+  };
+
+  db.treinos.push(novoTreino);
+  saveData(db);
+
+  res.json(novoTreino);
+});
+
+app.put('/api/treinos/:id/concluir', (req, res) => {
+  const { id } = req.params;
+
+  const index = db.treinos.findIndex(t => t.id === id);
+  if (index !== -1) {
+    db.treinos[index] = {
+      ...db.treinos[index],
+      concluido: 1,
+      updated_at: new Date().toISOString(),
+    };
+    saveData(db);
+    res.json(db.treinos[index]);
+  } else {
+    res.status(404).json({ error: 'Treino não encontrado' });
+  }
+});
+
+// ==================== FINANÇAS ====================
+
+app.get('/api/financas', (req, res) => {
+  const { mes, ano, tipo } = req.query;
+
+  let financas = [...db.financas];
+
+  // Filtro por mês/ano
+  if (mes || ano) {
+    const mesNum = mes ? parseInt(mes) : null;
+    const anoNum = ano ? parseInt(ano) : null;
+
+    financas = financas.filter(f => {
+      const data = new Date(f.data);
+      if (mesNum && data.getMonth() + 1 !== mesNum) return false;
+      if (anoNum && data.getFullYear() !== anoNum) return false;
+      return true;
+    });
+  }
+
+  // Filtro por tipo
+  if (tipo && ['entrada', 'saida'].includes(tipo)) {
+    financas = financas.filter(f => f.tipo === tipo);
+  }
+
+  // Ordenar por data (mais recente primeiro)
+  financas.sort((a, b) => new Date(b.data) - new Date(a.data));
+
+  res.json(financas);
+});
+
+app.get('/api/financas/resumo', (req, res) => {
+  const { mes, ano } = req.query;
+
+  const mesNum = mes ? parseInt(mes) : new Date().getMonth() + 1;
+  const anoNum = ano ? parseInt(ano) : new Date().getFullYear();
+
+  const financasFiltradas = db.financas.filter(f => {
+    const data = new Date(f.data);
+    return data.getMonth() + 1 === mesNum && data.getFullYear() === anoNum;
+  });
+
+  const totalEntradas = financasFiltradas
+    .filter(f => f.tipo === 'entrada')
+    .reduce((sum, f) => sum + (f.valor || 0), 0);
+
+  const totalSaidas = financasFiltradas
+    .filter(f => f.tipo === 'saida')
+    .reduce((sum, f) => sum + (f.valor || 0), 0);
+
+  const saldo = totalEntradas - totalSaidas;
+
+  res.json({
+    mes: mesNum,
+    ano: anoNum,
+    totalEntradas,
+    totalSaidas,
+    saldo,
+    totalTransacoes: financasFiltradas.length
+  });
+});
+
+app.post('/api/financas', (req, res) => {
+  const { tipo, valor, data, descricao, categoria, mensagem_nl } = req.body;
+  const id = uuidv4();
+
+  // Se veio mensagem em linguagem natural, fazer parse
+  let transacao = {};
+  if (mensagem_nl) {
+    const sugestao = financeParser.sugerirTransacao(mensagem_nl);
+     if (sugestao.valido && sugestao.transacoes && sugestao.transacoes.length > 0) {
+      // Registrar TODAS as transações detectadas
+      const resultados = [];
+      for (const parsed of sugestao.transacoes) {
+        const t = {
+          tipo: (parsed.type === 'entrada' || parsed.type === 'income') ? 'entrada' : 'saida',
+          valor: parsed.amount,
+          data: parsed.date,
+          descricao: parsed.description,
+          categoria: parsed.category
+        };
+        const novaFinanca = {
+          id: uuidv4(),
+          ...t,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+        db.financas.push(novaFinanca);
+        resultados.push(novaFinanca);
+      }
+      saveData(db);
+      return res.json({ transacoes: resultados, financa: resultados[0] });
+    } else {
+      return res.status(400).json({ error: sugestao.mensagem });
+    }
+  } else {
+    // Validação manual
+    if (!tipo || !['entrada', 'saida'].includes(tipo)) {
+      return res.status(400).json({ error: 'Tipo deve ser "entrada" ou "saida"' });
+    }
+    if (!valor || isNaN(valor) || valor <= 0) {
+      return res.status(400).json({ error: 'Valor deve ser um número positivo' });
+    }
+    transacao = {
+      tipo,
+      valor: parseFloat(valor),
+      data: data || (() => { const d = new Date(); return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().split('T')[0]; })(),
+      descricao: descricao || (tipo === 'entrada' ? 'Receita' : 'Despesa'),
+      categoria: categoria || 'outros'
+    };
+  }
+
+  const novaFinanca = {
+    id,
+    ...transacao,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  };
+
+  db.financas.push(novaFinanca);
+  saveData(db);
+
+  res.json({ financa: novaFinanca });
+});
+
+app.put('/api/financas/:id', (req, res) => {
+  const { id } = req.params;
+  const updates = req.body;
+
+  const index = db.financas.findIndex(f => f.id === id);
+  if (index !== -1) {
+    db.financas[index] = {
+      ...db.financas[index],
+      ...updates,
+      updated_at: new Date().toISOString()
+    };
+    saveData(db);
+    res.json(db.financas[index]);
+  } else {
+    res.status(404).json({ error: 'Transação financeira não encontrada' });
+  }
+});
+
+app.delete('/api/financas/:id', (req, res) => {
+  const { id } = req.params;
+  const index = db.financas.findIndex(f => f.id === id);
+
+  if (index !== -1) {
+    db.financas.splice(index, 1);
+    saveData(db);
+    res.json({ message: 'Transação removida com sucesso' });
+  } else {
+    res.status(404).json({ error: 'Transação financeira não encontrada' });
+  }
+});
+
+// ==================== FINANÇAS - CONFIRMAÇÃO ====================
+
+// Endpoint para registrar múltiplas transações (usado pela IA)
+app.post('/api/financas/confirmar', async (req, res) => {
+  const { transacoes, confirmacao } = req.body;
+
+  if (!confirmacao || !['sim', 'não', 'nao'].includes(confirmacao.toLowerCase())) {
+    return res.status(400).json({ error: 'Response de confirmação inválida. Use "sim" ou "não".' });
+  }
+
+  if (confirmacao.toLowerCase() === 'não' || confirmacao.toLowerCase() === 'nao') {
+    return res.json({ registrado: false, mensagem: 'Registro cancelado pelo usuário.' });
+  }
+
+  if (!transacoes || !Array.isArray(transacoes) || transacoes.length === 0) {
+    return res.status(400).json({ error: 'Nenhuma transação fornecida para registro.' });
+  }
+
+  const resultados = [];
+  for (const transacao of transacoes) {
+    const id = uuidv4();
+
+    // Normalizar dados (suportar formato novo e legado)
+    const tipo = transacao.type === 'entrada' ? 'entrada' : transacao.type === 'gasto' ? 'saida' : (transacao.tipo === 'entrada' ? 'entrada' : 'saida');
+    const valor = parseFloat(transacao.amount || transacao.valor || 0);
+    const descricao = transacao.description || transacao.descricao || (tipo === 'entrada' ? 'Receita' : 'Despesa');
+    const categoria = transacao.category || transacao.categoria || 'outros';
+    const data = transacao.date || transacao.data || (() => { const d = new Date(); return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().split('T')[0]; })();
+
+    const novaFinanca = {
+      id,
+      tipo,
+      valor,
+      data,
+      descricao,
+      categoria,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+
+    db.financas.push(novaFinanca);
+    resultados.push(novaFinanca);
+  }
+
+  saveData(db);
+
+  res.json({
+    registrado: true,
+    mensagem: `${resultados.length} transação(ões) registrada(s) com sucesso!`,
+    transacoes: resultados
+  });
+});
+
+app.get('/api/conversas', (req, res) => {
+  res.json(db.conversas.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)));
+});
+
+app.post('/api/conversas', (req, res) => {
+  const { titulo } = req.body;
+  const id = uuidv4();
+
+  const novaConversa = {
+    id,
+    titulo: titulo || null,
+    created_at: new Date().toISOString(),
+  };
+
+  db.conversas.push(novaConversa);
+  db.mensagens = db.mensagens || [];
+  saveData(db);
+
+  res.json(novaConversa);
+});
+
+app.get('/api/conversas/:id/mensagens', (req, res) => {
+  const { id } = req.params;
+  const mensagens = db.mensagens.filter(m => m.conversa_id === id).sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+  res.json(mensagens);
+});
+
+app.post('/api/conversas/:id/mensagens', (req, res) => {
+  const { id: conversaId } = req.params;
+  const { role, conteudo } = req.body;
+  const id = uuidv4();
+
+  if (!db.mensagens) {
+    db.mensagens = [];
+  }
+
+  const novaMensagem = {
+    id,
+    conversa_id: conversaId,
+    role,
+    conteudo,
+    created_at: new Date().toISOString(),
+  };
+
+  db.mensagens.push(novaMensagem);
+  saveData(db);
+
+  let sugestoes = [];
+  if (role === 'user') {
+    sugestoes = gerarRespostaIA(conteudo);
+  }
+
+  res.json({ mensagem: novaMensagem, sugestoes });
+});
+
+function gerarRespostaIA(mensagem) {
+  const mensagemLower = mensagem.toLowerCase();
+  const sugestoes = [];
+
+  // 1. PRIORIDADE: Detecção de transações financeiras
+  const financeiro = financeParser.sugerirTransacao(mensagem);
+
+  if (financeiro.valido && financeiro.transacoes && financeiro.transacoes.length > 0) {
+    // Detectar se o usuário está confirmando ou negando um registro anterior
+    const confirmaSim = /^(sim|yes|s|confirmo|confirmar|pode|registra|salvar)$/i.test(mensagem.trim());
+    const confirmaNao = /^(não|nao|no|n|cancela|cancelar|pare|stop)$/i.test(mensagem.trim());
+
+    // Se for confirmação, o handler na rota irá processar
+    if (confirmaSim || confirmaNao) {
+      return []; // Deixa o handler de confirmação cuidar disso
+    }
+
+    // Retornar detecção de transações para confirmação
+    const sugestoesFinanceiras = [{
+      tipo: 'financa_pendente',
+      acao: 'Registrar transações detectadas?',
+      descricao: `Detectei ${financeiro.transacoes.length} movimentação(ões) financeira(s):\n\n${financeiro.sugestoes.join('\n\n')}\n\nDeseja registrar? (sim/não)`,
+      transacoes: financeiro.transacoes,
+      requerConfirmacao: true
+    }];
+
+    return sugestoesFinanceiras;
+  }
+
+  // 2. OUTRAS FUNCIONALIDADES (manter comportamento existente)
+  if (mensagemLower.includes('tarefa') || mensagemLower.includes('afazer') || mensagemLower.includes('lembrar') || mensagemLower.includes('preciso')) {
+    sugestoes.push({
+      tipo: 'tarefa',
+      acao: 'Criar nova tarefa',
+      descricao: `Vou adicionar: "${mensagem}" às suas tarefas. A IA vai organizar automaticamente por prioridade e data!`
+    });
+  }
+
+  if (mensagemLower.includes('estudar') || mensagemLower.includes('estudo') || mensagemLower.includes('aprender')) {
+    sugestoes.push({
+      tipo: 'estudo',
+      acao: 'Planejar sessão de estudos',
+      descricao: `Vou registrar um plano de estudos para: "${mensagem}". Define assunto e duração!`
+    });
+  }
+
+  if (mensagemLower.includes('treino') || mensagemLower.includes('academia') || mensagemLower.includes('exercício') || mensagemLower.includes('caminhada')) {
+    sugestoes.push({
+      tipo: 'treino',
+      acao: 'Agendar treino',
+      descricao: `Vou criar um registro de treino para: "${mensagem}". Você pode adicionar exercícios e intensidade!`
+    });
+  }
+
+  if (mensagemLower.includes('ideia') || mensagemLower.includes('pensar') || mensagemLower.includes('planejar') || mensagemLower.includes('criar')) {
+    sugestoes.push({
+      tipo: 'ideia',
+      acao: 'Registrar ideia',
+      descricao: `Excelente! Vou catalogar sua ideia: "${mensagem}" e organizar na sua agenda.`
+    });
+  }
+
+  if (sugestoes.length === 0) {
+    sugestoes.push({
+      tipo: 'geral',
+      acao: 'Ajudar a organizar',
+      descricao: `Entendi: "${mensagem}". Posso ajudar a organizar isso como uma tarefa, estudo ou treino. Em que categoria se encaixa melhor?`
+    });
+  }
+
+  return sugestoes;
+}
+// ==================== ÁGUA ====================
+
+app.get('/api/agua', (req, res) => {
+  const { data } = req.query;
+  const hoje = data || (() => { const d = new Date(); return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().split('T')[0]; })();
+  
+  if (!db.agua) db.agua = [];
+  
+  const registro = db.agua.find(a => a.data === hoje);
+  res.json(registro || { data: hoje, total: 0, registros: [], meta: 2000 });
+});
+
+app.post('/api/agua', (req, res) => {
+  const { quantidade, meta } = req.body;
+  const hoje = (() => { const d = new Date(); return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().split('T')[0]; })();
+  
+  if (!db.agua) db.agua = [];
+  
+  let registro = db.agua.find(a => a.data === hoje);
+  
+  if (!registro) {
+    registro = { data: hoje, total: 0, registros: [], meta: meta || 2000 };
+    db.agua.push(registro);
+  }
+  
+  if (quantidade) {
+    registro.total += quantidade;
+    registro.registros.push({ quantidade, hora: new Date().toLocaleTimeString('pt-BR') });
+  }
+  
+  if (meta) registro.meta = meta;
+  
+  saveData(db);
+  res.json(registro);
+});
+
+app.delete('/api/agua/ultimo', (req, res) => {
+  const hoje = (() => { const d = new Date(); return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().split('T')[0]; })();
+  
+  if (!db.agua) db.agua = [];
+  
+  const registro = db.agua.find(a => a.data === hoje);
+  if (registro && registro.registros.length > 0) {
+    const ultimo = registro.registros.pop();
+    registro.total -= ultimo.quantidade;
+    saveData(db);
+  }
+  
+  res.json(registro || { data: hoje, total: 0, registros: [], meta: 2000 });
+});
+// ══════════════════════════════════════════════════════════════════════
+// ADICIONAR NO server/index.js
+// Cole este bloco logo ANTES da linha: app.listen(PORT, () => {
+// ══════════════════════════════════════════════════════════════════════
+
+// ==================== CATEGORIAS ====================
+
+// Categorias padrão (usadas se não houver customizações salvas)
+const CATEGORIAS_PADRAO = [
+  { id: 'alimentacao', label: 'Alimentação', icon: '🍔', cor: '#ffaa00', padrao: true },
+  { id: 'transporte',  label: 'Transporte',  icon: '🚗', cor: '#00f3ff', padrao: true },
+  { id: 'moradia',     label: 'Moradia',     icon: '🏠', cor: '#ff00ff', padrao: true },
+  { id: 'saude',       label: 'Saúde',       icon: '💉', cor: '#00ff9d', padrao: true },
+  { id: 'lazer',       label: 'Lazer',       icon: '🎮', cor: '#a78bfa', padrao: true },
+  { id: 'educacao',    label: 'Educação',    icon: '📚', cor: '#00f3ff', padrao: true },
+  { id: 'vestuario',   label: 'Vestuário',   icon: '👕', cor: '#ff00ff', padrao: true },
+  { id: 'investimento',label: 'Investimento',icon: '📈', cor: '#00ff9d', padrao: true },
+  { id: 'salario',     label: 'Salário',     icon: '💰', cor: '#00ff9d', padrao: true },
+  { id: 'freelance',   label: 'Freelance',   icon: '💼', cor: '#ffaa00', padrao: true },
+  { id: 'outros',      label: 'Outros',      icon: '📦', cor: '#888888', padrao: true },
+];
+
+// Garantir que db.categorias existe
+if (!db.categorias) {
+  db.categorias = [...CATEGORIAS_PADRAO];
+  saveData(db);
+}
+
+// GET /api/categorias — listar todas
+app.get('/api/categorias', (req, res) => {
+  // Mescla padrão + customizadas (sem duplicar)
+  const padrao = CATEGORIAS_PADRAO.filter(
+    p => !db.categorias.some(c => c.id === p.id && !c.padrao)
+  );
+  const custom = db.categorias.filter(c => !c.padrao);
+  const todasPadrao = db.categorias.filter(c => c.padrao);
+  res.json(db.categorias);
+});
+
+// POST /api/categorias — criar categoria customizada
+app.post('/api/categorias', (req, res) => {
+  const { label, icon, cor } = req.body;
+
+  if (!label || !label.trim()) {
+    return res.status(400).json({ error: 'Nome da categoria é obrigatório.' });
+  }
+
+  // Gerar id a partir do label (slug)
+  const id = label
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]/g, '_')
+    .replace(/_+/g, '_')
+    .replace(/^_|_$/g, '');
+
+  // Checar duplicata
+  if (db.categorias.some(c => c.id === id)) {
+    return res.status(400).json({ error: 'Já existe uma categoria com esse nome.' });
+  }
+
+  const novaCategoria = {
+    id,
+    label: label.trim(),
+    icon: icon || '🏷️',
+    cor: cor || '#00f3ff',
+    padrao: false,
+    created_at: new Date().toISOString(),
+  };
+
+  db.categorias.push(novaCategoria);
+  saveData(db);
+  res.json(novaCategoria);
+});
+
+// DELETE /api/categorias/:id — remover (só customizadas; padrão não pode ser removida)
+app.delete('/api/categorias/:id', (req, res) => {
+  const { id } = req.params;
+  const categoria = db.categorias.find(c => c.id === id);
+
+  if (!categoria) {
+    return res.status(404).json({ error: 'Categoria não encontrada.' });
+  }
+  if (categoria.padrao) {
+    return res.status(400).json({ error: 'Categorias padrão não podem ser removidas.' });
+  }
+
+  db.categorias = db.categorias.filter(c => c.id !== id);
+  saveData(db);
+  res.json({ message: 'Categoria removida com sucesso.' });
+});
+// ==================== TIPOS DE PAGAMENTO E BANCOS ====================
+
+const TIPOS_PAGAMENTO_PADRAO = [
+  { id: 'debito',      label: 'Débito',        icon: '💳' },
+  { id: 'credito',     label: 'Crédito',       icon: '💳' },
+  { id: 'fatura',      label: 'Fatura Cartão', icon: '🧾' },
+  { id: 'pix',         label: 'Pix',           icon: '⚡' },
+  { id: 'dinheiro',    label: 'Dinheiro',      icon: '💵' },
+  { id: 'ted_doc',     label: 'TED / DOC',     icon: '🏦' },
+  { id: 'boleto',      label: 'Boleto',        icon: '📄' },
+];
+
+const BANCOS_PADRAO = [
+  { id: 'nubank',       label: 'Nubank',         icon: '🟣' },
+  { id: 'inter',        label: 'Inter',           icon: '🟠' },
+  { id: 'itau',         label: 'Itaú',            icon: '🟡' },
+  { id: 'bradesco',     label: 'Bradesco',        icon: '🔴' },
+  { id: 'bb',           label: 'Banco do Brasil', icon: '🟡' },
+  { id: 'caixa',        label: 'Caixa',           icon: '🔵' },
+  { id: 'santander',    label: 'Santander',       icon: '🔴' },
+  { id: 'c6',           label: 'C6 Bank',         icon: '⚫' },
+  { id: 'xp',           label: 'XP',              icon: '⬛' },
+  { id: 'picpay',       label: 'PicPay',          icon: '🟢' },
+  { id: 'mercadopago',  label: 'Mercado Pago',    icon: '💙' },
+  { id: 'outro',        label: 'Outro',           icon: '🏦' },
+];
+
+if (!db.tiposPagamento) { db.tiposPagamento = TIPOS_PAGAMENTO_PADRAO; saveData(db); }
+if (!db.bancos)         { db.bancos = BANCOS_PADRAO; saveData(db); }
+
+app.get('/api/tipos-pagamento', (req, res) => res.json(db.tiposPagamento));
+app.get('/api/bancos', (req, res) => res.json(db.bancos));
+
+app.patch('/api/financas/:id/parcela', (req, res) => {
+  const { id } = req.params;
+  const index = db.financas.findIndex(f => f.id === id);
+  if (index === -1) return res.status(404).json({ error: 'Transação não encontrada.' });
+  const f = db.financas[index];
+  if ((f.parcelaAtual || 1) >= (f.parcelaTotal || 1))
+    return res.status(400).json({ error: 'Todas as parcelas já foram pagas.' });
+  db.financas[index] = { ...f, parcelaAtual: (f.parcelaAtual || 1) + 1, updated_at: new Date().toISOString() };
+  saveData(db);
+  res.json(db.financas[index]);
+});
+
+app.get('/api/financas/assinaturas', (req, res) => {
+  res.json(db.financas.filter(f => f.assinatura === true));
+});
+
+app.delete('/api/financas/assinatura/:id', (req, res) => {
+  const { id } = req.params;
+  const index = db.financas.findIndex(f => f.id === id);
+  if (index === -1) return res.status(404).json({ error: 'Assinatura não encontrada.' });
+  db.financas.splice(index, 1);
+  saveData(db);
+  res.json({ message: 'Assinatura cancelada.' });
+});
+app.listen(PORT, () => {
+  console.log(`🚀 Servidor rodando na porta ${PORT}`);
+  console.log(`📊 Database: ${dbPath}`);
+  console.log(`🌐 Acesse: http://localhost:${PORT}`);
+});

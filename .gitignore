@@ -1,0 +1,10 @@
+node_modules/
+database.sqlite
+.DS_Store
+.env
+*.log
+.vscode/
+.idea/
+build/
+dist/
+coverage/
