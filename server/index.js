@@ -670,10 +670,8 @@ app.get('/api/bancos', (req, res) => res.json(db.bancos));
 // START
 // ══════════════════════════════════════════════════════════════════════════════
 
-if (process.env.NODE_ENV !== "test") {
-  app.listen(PORT, () => {
-    console.log(`🚀 Servidor rodando na porta ${PORT}`);
-    console.log(`📊 Database: ${dbPath}`);
-    console.log(`🌐 Acesse: http://localhost:${PORT}`);
-  });
-}
+app.listen(PORT, () => {
+  console.log(`🚀 Servidor rodando na porta ${PORT}`);
+  console.log(`📊 Database: ${dbPath}`);
+  console.log(`🌐 Acesse: http://localhost:${PORT}`);
+});
