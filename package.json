@@ -1,5 +1,5 @@
 {
-  "name": "central-produtividade-ia",
+  "name": "Mentrix",
   "version": "1.0.0",
   "description": "Central de produtividade com organização inteligente de tarefas e IA",
   "main": "server/index.js",
@@ -23,6 +23,6 @@
     "gestão-tarefas",
     "rotinas"
   ],
-  "author": "",
+  "author": "Wingedzy",
   "license": "MIT"
 }
