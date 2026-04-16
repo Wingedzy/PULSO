@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [ "master", "Dh" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clonar repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      # BACKEND
+      - name: Instalar deps backend
+        run: npm install
+
+      - name: Validar backend (sem rodar servidor)
+        run: node -e "require('./server/index.js')"
+
+      # FRONTEND
+      - name: Instalar deps frontend
+        run: |
+          cd client
+          npm install
+
+      - name: Build frontend
+        run: |
+          cd client
+          npm run build
