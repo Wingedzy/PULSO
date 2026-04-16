@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node:*)",
+      "Bash(sh -c 'node migrate.js' 2>&1)",
+      "Bash(echo \"Exit code: $?\")"
+    ]
+  }
+}
