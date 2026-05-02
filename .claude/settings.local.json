@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find . -type f \\\\\\(-name *.js -o -name *.jsx -o -name *.ts -o -name *.tsx -o -name *.py -o -name *.java -o -name *.go -o -name *.rb \\\\\\))",
+      "Bash(grep:*)",
+      "Bash(find . -name *.js -o -name *.jsx)"
+    ]
+  }
+}

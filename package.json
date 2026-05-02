@@ -1,0 +1,14 @@
+{
+  "prisma": {
+    "seed": "node seed.js"
+  },
+  "scripts": {
+    "postinstall": "prisma generate"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.3",
+    "dotenv": "^17.4.2",
+    "lucide-react": "^0.460.0",
+    "prisma": "^6.19.3"
+  }
+}

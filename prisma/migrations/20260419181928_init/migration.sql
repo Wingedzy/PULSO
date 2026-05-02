@@ -1,0 +1,11 @@
+-- AlterTable
+ALTER TABLE "Estudo" ALTER COLUMN "duracao_planejada" DROP NOT NULL,
+ALTER COLUMN "duracao_real" DROP NOT NULL;
+
+-- AlterTable
+ALTER TABLE "Financa" ADD COLUMN     "dataFim" TEXT,
+ALTER COLUMN "valor" SET DATA TYPE DOUBLE PRECISION,
+ALTER COLUMN "valorTotal" SET DATA TYPE DOUBLE PRECISION;
+
+-- AlterTable
+ALTER TABLE "Treino" ALTER COLUMN "duracao" DROP NOT NULL;

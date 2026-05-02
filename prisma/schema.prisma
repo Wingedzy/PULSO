@@ -1,0 +1,211 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Tarefa {
+  id          String   @id
+  tipo        String
+  titulo      String
+  descricao   String
+  data        String
+  prioridade  Int
+  status      String
+  tags        String
+  created_at  String
+  updated_at  String
+}
+
+model Estudo {
+  id                  String @id
+  assunto             String
+  topico              String
+  duracao_planejada   Int?
+  data                String
+  duracao_real        Int?
+  concluido           Int
+  observacoes         String
+  created_at          String
+  updated_at          String
+}
+
+model Treino {
+  id          String  @id
+  tipo        String
+  exercicios  String
+  data        String
+  duracao     Int?
+  intensidade String
+  concluido   Int
+  observacoes String
+  avaliacao   Int?
+  progressao  String?
+  dor         String?
+  created_at  String
+  updated_at  String
+}
+
+model Conversa {
+  id         String @id
+  titulo     String
+  created_at String
+  mensagens  Mensagem[]
+}
+
+model Mensagem {
+  id           String @id
+  conversa_id  String
+  role         String
+  conteudo     String
+  created_at   String
+  conversa Conversa @relation(fields: [conversa_id], references: [id])
+}
+
+model Financa {
+  id                     String   @id
+  tipo                   String
+  valor                  Float
+  valorTotal             Float?
+  data                   String
+  descricao              String
+  descricaoBase          String?
+  categoria              String
+  banco                  String?
+  tipoPagamento          String?
+  parcelado              Boolean?
+  parcelaAtual           Int?
+  parcelasTotal          Int?
+  grupoParcela           String?
+  assinatura             Boolean?
+  frequenciaAssinatura   String?
+  grupoAssinaturaId      String?
+  geradaAutomaticamente  Boolean?
+  dataFim                String?
+  created_at             String
+  updated_at             String
+}
+
+model Agua {
+  id         String @id
+  data       String @unique
+  total      Int
+  registros  String
+  meta       Int
+  created_at String
+  updated_at String
+}
+
+model RegistroEmocional {
+  id         String  @id
+  emocao     String
+  texto      String?
+  data       String
+  hora       String
+  created_at String
+  updated_at String
+}
+
+model ItemDesejo {
+  id          String  @id
+  titulo      String
+  preco       Float
+  link        String?
+  prioridade  Int
+  categoria   String
+  observacoes String?
+  status      String
+  created_at  String
+  updated_at  String
+}
+
+model Categoria {
+  id         String  @id
+  label      String
+  icon       String
+  cor        String
+  padrao     Boolean @default(false)
+  created_at String
+  updated_at String
+}
+
+// ─── NOVOS MODELS ──────────────────────────────────────────────────────────────
+
+model Habito {
+  id         String          @id
+  nome       String
+  cor        String          @default("#00ff9d")
+  ativo      Boolean         @default(true)
+  created_at String
+  updated_at String
+  registros  RegistroHabito[]
+}
+
+model RegistroHabito {
+  id         String  @id
+  habito_id  String
+  data       String
+  created_at String
+  habito     Habito  @relation(fields: [habito_id], references: [id])
+
+  @@unique([habito_id, data])
+}
+
+model Meta {
+  id            String  @id
+  titulo        String
+  categoria     String  @default("outros")
+  valor_alvo    Float
+  valor_atual   Float   @default(0)
+  aporte_mensal Float   @default(0)
+  cor           String  @default("#00f3ff")
+  foto_url      String? @db.Text
+  created_at    String
+  updated_at    String
+}
+
+model Rotina {
+  id          String           @id
+  nome        String
+  descricao   String           @default("")
+  dias_semana String           @default("[1,2,3,4,5]")
+  prioridade  Int              @default(3)
+  horario     String?
+  categoria   String?
+  created_at  String
+  updated_at  String
+  execucoes   ExecucaoRotina[]
+}
+
+model ExecucaoRotina {
+  id         String  @id
+  rotina_id  String
+  data       String
+  created_at String
+  rotina     Rotina  @relation(fields: [rotina_id], references: [id])
+
+  @@unique([rotina_id, data])
+}
+
+model Investimento {
+  id              String  @id
+  tipo            String  @default("renda_fixa")
+  nome            String
+  valor_investido Float
+  valor_atual     Float
+  data            String
+  notas           String?
+  created_at      String
+  updated_at      String
+}
+
+model Orcamento {
+  id         String @id
+  categoria  String @unique
+  limite     Float
+  created_at String
+  updated_at String
+}
