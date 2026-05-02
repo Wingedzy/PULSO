@@ -1,4 +1,4 @@
-# 🧠 Mentrix — Central de Produtividade Pessoal
+# 🧠 Pulso — Central de Produtividade Pessoal
 
 Uma aplicação completa para gerenciar sua rotina, finanças, saúde, estudos e muito mais, com organização inteligente de tarefas.
 
